@@ -179,31 +179,28 @@ function ChatView() {
       <div className="flex flex-col h-screen bg-gray-50">
         {/* Chat Interface Content */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar for previous chats - MOBILE: only visible when sidebarOpen is true */}
-          {/* DESKTOP: always visible regardless of sidebarOpen value */}
-          <div
-            className={`${
-              sidebarOpen ? 'block' : 'hidden'
-            } w-64 bg-white border-r border-gray-200 overflow-y-auto fixed h-full z-30 md:relative md:block md:w-1/4`}
-          >
-            <div className="p-4">
-              <h3 className="font-medium text-gray-700 mb-4">Previous Conversations</h3>
-              {previousChats.map((chat) => (
-                <div
-                  key={chat.id}
-                  className={`mb-3 p-3 rounded-md cursor-pointer ${
-                    selectedChatId === chat.id ? 'bg-teal-100' : 'hover:bg-gray-100'
-                  }`}
-                  onClick={() => handleSelectChat(chat.id)}
-                >
-                  <div className="font-medium text-gray-800">{chat.title}</div>
-                  <div className="text-sm text-gray-500">{chat.date}</div>
-                </div>
-              ))}
+          {/* Sidebar for previous chats - ONLY visible when sidebarOpen is true */}
+          {sidebarOpen && (
+            <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto fixed h-full z-30 md:w-1/4 md:static">
+              <div className="p-4">
+                <h3 className="font-medium text-gray-700 mb-4">Previous Conversations</h3>
+                {previousChats.map((chat) => (
+                  <div
+                    key={chat.id}
+                    className={`mb-3 p-3 rounded-md cursor-pointer ${
+                      selectedChatId === chat.id ? 'bg-teal-100' : 'hover:bg-gray-100'
+                    }`}
+                    onClick={() => handleSelectChat(chat.id)}
+                  >
+                    <div className="font-medium text-gray-800">{chat.title}</div>
+                    <div className="text-sm text-gray-500">{chat.date}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Mobile backdrop for sidebar */}
+          {/* Mobile backdrop for sidebar - only shows when sidebar is open */}
           {sidebarOpen && (
             <div
               className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
@@ -237,11 +234,6 @@ function ChatView() {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex items-center gap-2 focus:outline-none"
                   >
-                    <img
-                      src="https://i.pravatar.cc/40"
-                      alt="Profile"
-                      className="w-8 h-8 rounded-full border-2 border-white"
-                    />
                     <ChevronDown size={16} />
                   </button>
                   {dropdownOpen && (
