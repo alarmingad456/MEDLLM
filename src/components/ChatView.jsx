@@ -10,6 +10,8 @@ import {
   Download,
   ChevronDown,
   X,
+  Paperclip,
+  Home,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +30,7 @@ function ChatView() {
   const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat
   const dropdownRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Sample previous chats with message history
   const previousChats = [
@@ -83,6 +86,15 @@ function ChatView() {
       ],
     },
   ];
+
+  // Get current chat title
+  const getCurrentChatTitle = () => {
+    if (selectedChatId) {
+      const currentChat = previousChats.find(chat => chat.id === selectedChatId);
+      return currentChat ? currentChat.title : 'New Conversation';
+    }
+    return 'New Conversation';
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -144,6 +156,20 @@ function ChatView() {
     }
   };
 
+  // Handle file attachment
+  const handleAttachment = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    if (files.length > 0) {
+      console.log('Files selected:', files);
+      // Handle file upload logic here
+      alert(`File "${files[0].name}" selected. Upload functionality will be implemented.`);
+    }
+  };
+
   // Handle feedback (e.g., thumbs up/down)
   const handleFeedback = (type, messageIndex) => {
     console.log(`Feedback for message ${messageIndex}: ${type}`);
@@ -181,21 +207,39 @@ function ChatView() {
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar for previous chats - ONLY visible when sidebarOpen is true */}
           {sidebarOpen && (
-            <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto fixed h-full z-30 md:w-1/4 md:static">
+            <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto fixed h-full z-30 md:w-1/4 md:static shadow-lg">
+              <div className="p-4 border-b border-gray-200 bg-teal-50">
+                <h3 className="font-semibold text-teal-800 text-lg">Your Conversations</h3>
+              </div>
               <div className="p-4">
-                <h3 className="font-medium text-gray-700 mb-4">Previous Conversations</h3>
                 {previousChats.map((chat) => (
                   <div
                     key={chat.id}
-                    className={`mb-3 p-3 rounded-md cursor-pointer ${
-                      selectedChatId === chat.id ? 'bg-teal-100' : 'hover:bg-gray-100'
+                    className={`mb-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                      selectedChatId === chat.id 
+                        ? 'bg-teal-100 border-l-4 border-teal-600 shadow-sm' 
+                        : 'hover:bg-gray-100 border-l-4 border-transparent'
                     }`}
                     onClick={() => handleSelectChat(chat.id)}
                   >
                     <div className="font-medium text-gray-800">{chat.title}</div>
-                    <div className="text-sm text-gray-500">{chat.date}</div>
+                    <div className="text-sm text-gray-500 mt-1">{chat.date}</div>
                   </div>
                 ))}
+                <button 
+                  className="w-full mt-4 p-3 bg-teal-700 text-white rounded-lg hover:bg-teal-800 transition-colors"
+                  onClick={() => {
+                    setSelectedChatId(null);
+                    setMessages([{
+                      sender: 'Medicare Assistant',
+                      text: 'Hello, I am a Medicare assistance agent. How may I help you with your healthcare needs today?',
+                      date: new Date().toLocaleString(),
+                    }]);
+                    setSidebarOpen(false);
+                  }}
+                >
+                  Start New Chat
+                </button>
               </div>
             </div>
           )}
@@ -211,7 +255,7 @@ function ChatView() {
           {/* Main Chat Area */}
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Chat header */}
-            <div className="bg-teal-800 text-white px-4 py-3 flex items-center justify-between">
+            <div className="bg-teal-800 text-white px-4 py-3 flex items-center justify-between shadow-md">
               <div className="flex items-center">
                 <button
                   aria-label="Toggle sidebar"
@@ -221,18 +265,22 @@ function ChatView() {
                 >
                   {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
-                <span className="font-medium">Medicare Assistant</span>
+                <span className="font-medium text-lg">{getCurrentChatTitle()}</span>
               </div>
               <div className="flex items-center gap-4">
-                <Link to="/" className="text-white hover:underline text-sm">
-                  Home
+                <Link 
+                  to="/" 
+                  className="flex items-center bg-teal-700 hover:bg-teal-600 px-3 py-1 rounded-md transition-colors"
+                >
+                  <Home size={16} className="mr-1" />
+                  <span className="text-sm">Home</span>
                 </Link>
                 {/* Profile Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <button
                     aria-label="Toggle profile dropdown"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 focus:outline-none"
+                    className="flex items-center gap-2 focus:outline-none hover:bg-teal-700 p-2 rounded-full"
                   >
                     <ChevronDown size={16} />
                   </button>
@@ -351,12 +399,19 @@ function ChatView() {
                   className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
                   rows="2"
                 />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  multiple
+                />
                 <button
-                  aria-label="Send message"
-                  onClick={handleSendMessage}
-                  className="p-2 bg-teal-800 text-white rounded-md hover:bg-teal-700 transition-colors"
+                  aria-label="Attach file"
+                  onClick={handleAttachment}
+                  className="p-2 text-gray-500 hover:text-teal-700 transition-colors"
                 >
-                  <Send size={18} />
+                  <Paperclip size={18} />
                 </button>
                 <button
                   aria-label="Record voice message"
@@ -364,6 +419,13 @@ function ChatView() {
                   onClick={() => console.log('Voice message clicked')}
                 >
                   <Mic size={18} />
+                </button>
+                <button
+                  aria-label="Send message"
+                  onClick={handleSendMessage}
+                  className="p-2 bg-teal-800 text-white rounded-md hover:bg-teal-700 transition-colors"
+                >
+                  <Send size={18} />
                 </button>
               </div>
             </div>
