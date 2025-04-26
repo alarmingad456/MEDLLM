@@ -1,0 +1,102 @@
+/* You can add this to your CSS file */
+@keyframes pulse {
+    0% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0.3);
+    }
+  }
+  
+  .audio-bar {
+    animation: pulse 0.8s ease-in-out infinite;
+    animation-delay: calc(var(--index) * 0.1s);
+  }
+  
+  /* Voice recording animation styles */
+@keyframes pulse {
+    0% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0.3);
+    }
+  }
+  
+  .audio-bar {
+    animation: pulse 0.8s ease-in-out infinite;
+    animation-delay: calc(var(--index) * 0.1s);
+  }
+  
+  /* Message hover effects */
+  .message-actions {
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  /* Copy button animation */
+  @keyframes checkmark {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .copy-success {
+    animation: checkmark 0.3s ease-in-out forwards;
+  }
+  
+  /* Voice recording animation styles */
+@keyframes pulse {
+    0% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0.3);
+    }
+  }
+  
+  .audio-bar {
+    animation: pulse 0.8s ease-in-out infinite;
+    animation-delay: calc(var(--index) * 0.1s);
+  }
+  
+  /* Message hover effects */
+  .message-actions {
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  /* Copy button animation */
+  @keyframes checkmark {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .copy-success {
+    animation: checkmark 0.3s ease-in-out forwards;
+  }
+  
